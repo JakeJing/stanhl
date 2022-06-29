@@ -30,8 +30,8 @@ new_defaults <- function(opts=list()) {
   opts$set <- function(...) {
     dots <- list(...)
     if (length(dots) == 0) return()
-    for (name in intersect(names(dots), names(opts$validators)))
-      opts$validators[[name]](dots[[name]]) # validation for some options
+    #for (name in intersect(names(dots), names(opts$validators)))
+    #  opts$validators[[name]](dots[[name]]) # validation for some options
     opts[names(dots)] <<- dots
   }
   opts$set(formatter="latex")
