@@ -10,7 +10,7 @@ parse_PyList <- function(x) {
 #' @export
 stanhl_styles <- function() {
   cmd <- paste0("python3 -c 'from pygments.styles import get_all_styles;",
-                "print list(get_all_styles())'")
+                "print(list(get_all_styles()))'")
   # greedy is ok here; formatted as Python list
   parse_PyList(pipe_in(cmd))
 }
