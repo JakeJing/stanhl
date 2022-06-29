@@ -19,14 +19,14 @@ You need [http://pygments.org](Pygments) installed. The following should work:
 If you don't have Pygments installed, just install with the
 [Python Package Index](https://pypi.python.org/pypi/Pygments):
 
-    $ pip install Pygments
+    $ pip3 install Pygments
 
 ## Installation
 
 Using the terrific [devtools](https://github.com/hadley/devtools) package, you
 can install `stanhl` with:
 
-    install_github('vsbuffalo/stanhl')
+    install_github('JakeJing/stanhl')
 
 If you don't have `devtools` installed, use `install.packages('devtools')` first.
 
@@ -38,26 +38,26 @@ There are two steps:
 
         \usepackage{fancyvrb}
         \usepackage{color}
-
+    
         <<echo=FALSE,results='asis'>>=
         library(stanhl)
         stanhl_latex()
         @
 
 2. Write your Stan model, store it to a variable (e.g. to call with
-`stan(model_code=x, ...`), and then use:
+   `stan(model_code=x, ...`), and then use:
 
         <<echo=FALSE,results='asis'>>=
         m <- "
-		data {
-		  // stan stuff
+	    data {
+	      // stan stuff
         }
-		model {
-		  // more stan stuff
-		}
+	    model {
+	      // more stan stuff
+	    }
         "
         stanhl(m)
-
+       
         @
 
 Then, in another block call `stan()`, do other stuff, etc.
@@ -103,7 +103,7 @@ The meat and potatoes (or tofu and eggplant):
     }
     "
     stanhl(m)
-
+    
     ```
 
 ## Highlighting Stan Models from File
@@ -113,9 +113,9 @@ You can also highlight a model directly from a `.stan` file:
     mesquite_file <- system.file("inst", "extdata", "mesquite_volume.stan",
                                  package="stanhl")
     stanhl_file(mesquite_file)
-
-	# Then run your Stan model directly from file with something like:
-	# fit <- stan(mesquite_file, data=mesquite_data)
+    
+    # Then run your Stan model directly from file with something like:
+    # fit <- stan(mesquite_file, data=mesquite_data)
 
 ## Styles
 
