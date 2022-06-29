@@ -6,10 +6,10 @@ parse_PyList <- function(x) {
 }
 
 #' List all styles (including plugins) available to Pygments
-#' 
+#'
 #' @export
 stanhl_styles <- function() {
-  cmd <- paste0("python -c 'from pygments.styles import get_all_styles;",
+  cmd <- paste0("python3 -c 'from pygments.styles import get_all_styles;",
                 "print list(get_all_styles())'")
   # greedy is ok here; formatted as Python list
   parse_PyList(pipe_in(cmd))
@@ -20,7 +20,7 @@ stanhl_styles <- function() {
 #' @param style a style to validate that it's available.
 check_valid_style <- function(style) {
   if (!(style %in% stanhl_styles()))
-    stop(sprintf("'%s' is not an available Pygments style.", style)) 
+    stop(sprintf("'%s' is not an available Pygments style.", style))
 }
 
 new_defaults <- function(opts=list()) {
