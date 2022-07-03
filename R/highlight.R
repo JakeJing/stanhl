@@ -51,10 +51,10 @@ get_header <- function(formatter=c("latex", "html")) {
 stanhl <- function(x) {
   has_pygments()
   formatter <- stanhl_opts$get("formatter")
-  cat("\\begin{Shaded}")
+  cat("\\begin{Shaded}\n")
   cat(pipe_in(cmd=sprintf('pygmentize -f "%s" -l stan', formatter),
               input=x))
-  cat("\\end{Shaded}")
+  cat("\\end{Shaded}\n")
 }
 
 #' Highlight Stan model code from file
