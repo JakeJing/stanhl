@@ -1,143 +1,94 @@
 # Stanhl — Stan Syntax Highlighting in knitr
 
-![A screenshot of stanhl syntax highlighting in a LaTeX document](https://raw.githubusercontent.com/vsbuffalo/stanhl/master/inst/extdata/example.png)
 
 
-I needed a simple hack to highlight [Stan](http://mc-stan.org/) syntax in
-[knitr](http://yihui.name/knitr/) files for [a course I'm
-taking](http://xcelab.net/rm/statistical-rethinking/) — `stanhl` is that hack.
-It's quick and dirty (e.g. this took me thirty minutes to write), but I thought
-I'd share before polishing it.
 
 ## Requirements
 
-You need [http://pygments.org](Pygments) installed. The following should work:
+- pygmentize
 
-    $ pygmentize -V
-    Pygments version 1.6, (c) 2006-2013 by Georg Brandl.
+```bash
+pip3 install Pygments
+# pygmentize -V
+```
 
-If you don't have Pygments installed, just install with the
-[Python Package Index](https://pypi.python.org/pypi/Pygments):
+- update xcode if you are using a mac
 
-    $ pip3 install Pygments
+```bash
+xcode-select --install
+```
+
 
 ## Installation
 
-Using the terrific [devtools](https://github.com/hadley/devtools) package, you
-can install `stanhl` with:
+- Install stanhl pkg
 
-    install_github('JakeJing/stanhl')
+```R
+library(devtools)
+install_github('JakeJing/stanhl')
+```
 
-If you don't have `devtools` installed, use `install.packages('devtools')` first.
+- download the [stanhl.tex](https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex) in your working directory and include it in the yaml header
 
-## Using `stanhl` in LaTeX (Rnw) files
+```bash
+wget https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex
+```
 
-There are two steps:
+```yaml
+output:
+   bookdown::pdf_document2:
+     includes:
+       in_header: latextemplates/stanhl.tex
+```
 
-1. Include the following in your LaTeX header:
+## Usage
 
-        \usepackage{fancyvrb}
-        \usepackage{color}
-    
-        <<echo=FALSE,results='asis'>>=
-        library(stanhl)
-        stanhl_latex()
-        @
+- include a stan script with compilation
 
-2. Write your Stan model, store it to a variable (e.g. to call with
-   `stan(model_code=x, ...`), and then use:
+~~~R
+```{r compile stan model, results='asis', echo=F}
+# results='asis' is important, so that it can be kept in the latex
+md_binom <- stan_model("./stanscripts/stan_binom.stan")
+stanhl(md_binom@model_code[1])
+```
+~~~
 
-        <<echo=FALSE,results='asis'>>=
-        m <- "
-	    data {
-	      // stan stuff
-        }
-	    model {
-	      // more stan stuff
-	    }
-        "
-        stanhl(m)
-       
-        @
+- include a stan script without compilation
 
-Then, in another block call `stan()`, do other stuff, etc.
+~~~R
+```{r results='asis', echo = F}
+stanhl_file("./stanscripts/stan_binom.stan")
+```
+~~~
 
-## Using `stanhl` in RMarkdown files
+- include a stan script as string without compilation
 
-![A screenshot of stanhl syntax highlighting in an HTML document](https://raw.githubusercontent.com/vsbuffalo/stanhl/master/inst/extdata/example_html.png)
+~~~R
+```{r results='asis', echo=F}
+stan_binom <- "
+data{
+int N; // number of observations
+int H; // number of observed head
+}
+parameters{
+real<lower=0, upper=1> p; // parameter for binomial distribution
+}
+model{
+// you can also specify the prior here.
+// If you leave it empty, it will use a flat or uniform prior
+p ~ uniform(0, 1);
+H ~ binomial(N, p); // likelihood func
+}
+"
+stanhl(stan_binom)
+```
+~~~
 
-I haven't extensively tested Markdown support (swamped for the next few weeks),
-but `stanhl_html()` should work as a replacement for `stanhl_latex()`. If it
-doesn't, feel free to submit a pull request. Below is the basic idea.
+- If you want to highlight the stan code chunk directly, pls check this [example script](https://github.com/JakeJing/knitr-markdown-engines/blob/master/templates/stan_highlight/stan_highlight.Rmd).
 
-The header:
+  ~~~R
+  ```{stan, output.var="binom_md", echo = F}
+  ```
+  ~~~
 
-    ```{r,echo=FALSE,results='asis'}
-    library(stanhl)
-    stanhl_html()
-    ```
-
-The meat and potatoes (or tofu and eggplant):
-
-    ```{r,echo=FALSE,results='asis'}
-    m <- "
-    data {
-      int<lower=0> N;
-      vector[N] weight;
-      vector[N] diam1;
-      vector[N] diam2;
-      vector[N] canopy_height;
-    }
-    transformed data {
-      vector[N] log_weight;
-      vector[N] log_canopy_volume;
-      log_weight        <- log(weight);
-      log_canopy_volume <- log(diam1 .* diam2 .* canopy_height);
-    }
-    parameters {
-      vector[2] beta;
-      real<lower=0> sigma;
-    }
-    model {
-      log_weight ~ normal(beta[1] + beta[2] * log_canopy_volume, sigma);
-    }
-    "
-    stanhl(m)
-    
-    ```
-
-## Highlighting Stan Models from File
-
-You can also highlight a model directly from a `.stan` file:
-
-    mesquite_file <- system.file("inst", "extdata", "mesquite_volume.stan",
-                                 package="stanhl")
-    stanhl_file(mesquite_file)
-    
-    # Then run your Stan model directly from file with something like:
-    # fit <- stan(mesquite_file, data=mesquite_data)
-
-## Styles
-
-You can change Pygments [style](http://pygments.org/docs/styles/) used in syntax
-highlighting with:
-
-     > stanhl_styles() # get available style list (depends on Pygments plugins)
-     [1] "monokai"  "manni"    "rrt"      "perldoc"  "borland"  "colorful"
-     [7] "default"  "murphy"   "vs"       "trac"     "tango"    "fruity"
-    [13] "autumn"   "bw"       "emacs"    "vim"      "pastie"   "friendly"
-    [19] "native"
-    > stanhl_opts$set(style="emacs")
-
-See the vignette for these styles rendered.
-
-## Todo
-
-I interfaced Pygments with R to create syntax highlighting for Stan, but
-afterwards thought it might be useful to have a more general R-Pygments
-interface. This interface is now the
-[pygmentr](https://github.com/vsbuffalo/pygmentr) package; I am debating
-whether to merge these two together, or just keep stanhl separate. For now,
-there are some Stan-specific features I want, e.g. including Stan models from
-file, so this package is worth it.
-
+  
