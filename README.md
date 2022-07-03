@@ -47,7 +47,7 @@ output:
 
 ~~~R
 ```{r compile stan model, results='asis', echo=F}
-# results='asis' is important, so that it can be kept in the latex
+# results='asis' is important, so that it can be preserved in the latex
 md_binom <- stan_model("./stanscripts/stan_binom.stan")
 stanhl(md_binom@model_code[1])
 ```
@@ -84,11 +84,13 @@ stanhl(stan_binom)
 ```
 ~~~
 
-- If you want to highlight the stan code chunk directly, pls check this [example script](https://github.com/JakeJing/knitr-markdown-engines/blob/master/templates/stan_highlight/stan_highlight.Rmd).
+## Others
 
-  ~~~R
-  ```{stan, output.var="binom_md", echo = F}
-  ```
-  ~~~
+If you want to highlight the stan code chunk directly, pls check this [example script](https://github.com/JakeJing/knitr-markdown-engines/blob/master/templates/stan_highlight/stan_highlight.Rmd).
+
+~~~R
+```{stan, output.var="binom_md", echo = F}
+```
+~~~
 
   
