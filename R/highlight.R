@@ -54,8 +54,7 @@ stanhl <- function(x) {
   cat("\\begin{Shaded}\n")
   cat(pipe_in(cmd=sprintf('pygmentize -f "%s" -l stan', formatter),
               input=x))
-  cat("\n")
-  cat("\\end{Shaded}\n")
+  cat("\n\\end{Shaded}\n")
 }
 
 #' Highlight Stan model code from file
@@ -70,7 +69,9 @@ stanhl_file <- function(file) {
       stop("file must be a single string filename.")
   has_pygments()
   formatter <- stanhl_opts$get("formatter")
+  cat("\\begin{Shaded}\n")
   cat(pipe_in(cmd=sprintf('pygmentize -f "%s" -l stan "%s"', formatter, file)))
+  cat("\n\\end{Shaded}\n")
 }
 
 
