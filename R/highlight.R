@@ -54,6 +54,7 @@ stanhl <- function(x) {
   cat("\\begin{Shaded}\n")
   cat(pipe_in(cmd=sprintf('pygmentize -f "%s" -l stan', formatter),
               input=x))
+  cat("\n")
   cat("\\end{Shaded}\n")
 }
 
