@@ -28,36 +28,11 @@ library(devtools)
 install_github('JakeJing/stanhl')
 ```
 
-- download the [stanhl.tex](https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex) in your working directory and include it in the yaml header
-
-```bash
-wget https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex
-```
-
-```yaml
-output:
-   bookdown::pdf_document2:
-     includes:
-       in_header: latextemplates/stanhl.tex
-```
-
 ## Usage
 
-Pls see also the example scripts inside the **template** folder.
+You can highlght the stan script in two ways. Pls see also the example scripts inside the **template** folder.
 
-### 1. Hightlight stan script with compilation
-
-- (1) using `stan_model`  and `stanhl` functions to compile and highlight stan code chunk
-
-~~~R
-```{r compile stan model, results='asis', echo=F}
-# results='asis' is important, so that it can be preserved in the latex
-md_binom <- stan_model("./stanscripts/stan_binom.stan")
-stanhl(md_binom@model_code[1])
-```
-~~~
-
-- (2) using stan chunk to compile and online R script to highlight
+### 1. Source the `stan_hl.R` and  generate latex template via `stanhl_init()` function.
 
 You first need to put this code chunk at the beginning of your R script with header setting as `results='asis', echo = F`.
 
@@ -90,7 +65,32 @@ H ~ binomial(N, p); // likelihood func
 ```
 ~~~
 
-### 2. Hightlight stan script without compilation
+### 2. Manually download latex template and include it in yaml  header
+
+Download the [stanhl.tex](https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex) in your working directory and include it in the yaml header
+
+```bash
+wget https://raw.githubusercontent.com/JakeJing/knitr-markdown-engines/master/templates/latextemplates/stanhl.tex
+```
+
+```yaml
+output:
+   bookdown::pdf_document2:
+     includes:
+       in_header: latextemplates/stanhl.tex
+```
+
+You can use `stan_model`  and `stanhl` functions to compile and highlight stan code chunk
+
+~~~R
+```{r compile stan model, results='asis', echo=F}
+# results='asis' is important, so that it can be preserved in the latex
+md_binom <- stan_model("./stanscripts/stan_binom.stan")
+stanhl(md_binom@model_code[1])
+```
+~~~
+
+## Hightlight stan script without compilation
 
 - (1) include a stan script
 
